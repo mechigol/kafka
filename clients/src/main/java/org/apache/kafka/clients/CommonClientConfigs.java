@@ -168,7 +168,8 @@ public class CommonClientConfigs {
     /**
      * Postprocess the configuration so that exponential backoff is disabled when reconnect backoff
      * is explicitly configured but the maximum reconnect backoff is not explicitly configured.
-     *
+     * 如果reconnect.backoff.max.ms没定义, reconnect.backoff.ms定义了, 那么 将 reconnect.backoff.max.ms 设置为
+     * reconnect.backoff.ms的值
      * @param config                    The config object.
      * @param parsedValues              The parsedValues as provided to postProcessParsedConfig.
      *

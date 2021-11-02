@@ -86,6 +86,7 @@ public class ConfigDef {
 
     private final Map<String, ConfigKey> configKeys;
     private final List<String> groups;
+    //那些不当别人parent的config, 它自己可能是有dependent的
     private Set<String> configsWithNoParent;
 
     public ConfigDef() {
@@ -484,6 +485,13 @@ public class ConfigDef {
         return values;
     }
 
+    /**
+     * 解析用户传入的值, 如果这个key 有validator,还要做validation
+     * @param key configKey
+     * @param value 用户定义的value, 需要parse
+     * @param isSet 用户是否定义, 定义了的话就用用户定义的, 没定义就用默认值
+     * @return
+     */
     Object parseValue(ConfigKey key, Object value, boolean isSet) {
         Object parsedValue;
         if (isSet) {
@@ -548,6 +556,7 @@ public class ConfigDef {
         return configValues;
     }
 
+    // dependent configs需要定义,这里找到没有定义的, 会抛出ConfigException
     private List<String> undefinedDependentConfigs() {
         Set<String> undefinedConfigKeys = new HashSet<>();
         for (ConfigKey configKey : configKeys.values()) {

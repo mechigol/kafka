@@ -442,6 +442,7 @@ public class ProducerConfig extends AbstractConfig {
         return refinedConfigs;
     }
 
+    //如果client.id没有定义, 那么client.id的定义要加入transaction的元素
     private void maybeOverrideClientId(final Map<String, Object> configs) {
         String refinedClientId;
         boolean userConfiguredClientId = this.originals().containsKey(CLIENT_ID_CONFIG);
@@ -454,6 +455,7 @@ public class ProducerConfig extends AbstractConfig {
         configs.put(CLIENT_ID_CONFIG, refinedClientId);
     }
 
+    //如果transactional.id定义了, 但是enable.idempotence没有定义, 默认设置为true
     private void maybeOverrideEnableIdempotence(final Map<String, Object> configs) {
         boolean userConfiguredIdempotence = this.originals().containsKey(ENABLE_IDEMPOTENCE_CONFIG);
         boolean userConfiguredTransactions = this.originals().containsKey(TRANSACTIONAL_ID_CONFIG);
@@ -463,6 +465,8 @@ public class ProducerConfig extends AbstractConfig {
         }
     }
 
+    // 1. 解析 acks = all -> -1, 其他数字变成short格式
+    // 2. 如果enable.idempotence 开启了, 需要 retries大于0, acks=-1, 其他情况报错
     private void maybeOverrideAcksAndRetries(final Map<String, Object> configs) {
         final String acksStr = parseAcks(this.getString(ACKS_CONFIG));
         configs.put(ACKS_CONFIG, acksStr);

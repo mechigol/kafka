@@ -105,12 +105,15 @@ public class AbstractConfig {
                 throw new ConfigException(entry.getKey().toString(), entry.getValue(), "Key must be a string.");
 
         this.originals = resolveConfigVariables(configProviderProps, (Map<String, Object>) originals);
+        // values是解析后的properties, 用户定义的已经替换进去了, 没定义的用了默认值, 有validator的,做了validation
         this.values = definition.parse(this.originals);
         this.used = Collections.synchronizedSet(new HashSet<>());
+        //将一些特殊处理的property update进values
         Map<String, Object> configUpdates = postProcessParsedConfig(Collections.unmodifiableMap(this.values));
         for (Map.Entry<String, Object> update : configUpdates.entrySet()) {
             this.values.put(update.getKey(), update.getValue());
         }
+        //做validation的作用.
         definition.parse(this.values);
         this.definition = definition;
         if (doLog)
@@ -228,6 +231,10 @@ public class AbstractConfig {
         return copy;
     }
 
+    /**
+     * @param configOverrides 如果定义的property在originals也有的话, originals中
+     *                        的参数会被覆盖
+     */
     public Map<String, Object> originals(Map<String, Object> configOverrides) {
         Map<String, Object> copy = new RecordingMap<>();
         copy.putAll(originals);
