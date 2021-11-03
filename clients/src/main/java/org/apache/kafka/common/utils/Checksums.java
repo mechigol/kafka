@@ -46,7 +46,8 @@ public final class Checksums {
                 checksum.update(buffer.get(i));
         }
     }
-    
+
+    // Int 总共 32bit
     public static void updateInt(Checksum checksum, int input) {
         checksum.update((byte) (input >> 24));
         checksum.update((byte) (input >> 16));
@@ -54,6 +55,7 @@ public final class Checksums {
         checksum.update((byte) input /* >> 0 */);
     }
 
+    //Long 总共 64bit
     public static void updateLong(Checksum checksum, long input) {
         checksum.update((byte) (input >> 56));
         checksum.update((byte) (input >> 48));

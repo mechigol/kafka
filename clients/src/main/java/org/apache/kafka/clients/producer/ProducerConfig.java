@@ -540,6 +540,8 @@ public class ProducerConfig extends AbstractConfig {
         super(CONFIG, props);
     }
 
+    // 如果定义了transational.id, enalbe.idempotence=false, 那报错.
+    // 1. enalbe.idempotence=true, 2. transactional.id定义了, enalbe.idempotence没有定义
     boolean idempotenceEnabled() {
         boolean userConfiguredIdempotence = this.originals().containsKey(ENABLE_IDEMPOTENCE_CONFIG);
         boolean userConfiguredTransactions = this.originals().containsKey(TRANSACTIONAL_ID_CONFIG);

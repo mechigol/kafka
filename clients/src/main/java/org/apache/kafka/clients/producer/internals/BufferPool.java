@@ -47,11 +47,16 @@ public class BufferPool {
     static final String WAIT_TIME_SENSOR_NAME = "bufferpool-wait-time";
 
     private final long totalMemory;
+    //free list里面每一个ByteBuffer的大小, 每个内存块的大小, 即batch.size
     private final int poolableSize;
+    // 申请归还内存的方法的同步锁
     private final ReentrantLock lock;
+    // 空闲的内存块
     private final Deque<ByteBuffer> free;
+    // 需要等待空闲内存块的事件
     private final Deque<Condition> waiters;
     /** Total available memory is the sum of nonPooledAvailableMemory and the number of byte buffers in free * poolableSize.  */
+    // 缓冲池中还没分配的空闲内存块, 新申请的内存块就是从这里获取内存值
     private long nonPooledAvailableMemory;
     private final Metrics metrics;
     private final Time time;
@@ -130,6 +135,9 @@ public class BufferPool {
             if (this.nonPooledAvailableMemory + freeListSize >= size) {
                 // we have enough unallocated or pooled memory to immediately
                 // satisfy the request, but need to allocate the buffer
+                // 如果未分配的内存大小比申请的内存要小,那么从已分配的内存列表中将内存空间要回来,知道nonPooledAvailableMemory
+                // 比申请的内存大为止,
+                // 相当于先用nonPooledAvailableMemory, 不够从freelist里面找
                 freeUp(size);
                 this.nonPooledAvailableMemory -= size;
             } else {

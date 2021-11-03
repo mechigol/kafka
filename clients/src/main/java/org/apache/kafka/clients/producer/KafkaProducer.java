@@ -487,7 +487,8 @@ public class KafkaProducer<K, V> implements Producer<K, V> {
     private static int lingerMs(ProducerConfig config) {
         return (int) Math.min(config.getLong(ProducerConfig.LINGER_MS_CONFIG), Integer.MAX_VALUE);
     }
-
+    // 1. 如果定义了 delivery.timeout.ms, 需要 > request.timeout.ms + linger.ms, 否则报错
+    // 2. 没有定义, delivery.timeout.ms = request.timeout.ms + linger.ms
     private static int configureDeliveryTimeout(ProducerConfig config, Logger log) {
         int deliveryTimeoutMs = config.getInt(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG);
         int lingerMs = lingerMs(config);
