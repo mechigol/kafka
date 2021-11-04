@@ -76,6 +76,7 @@ public class ByteBufferSend implements Send {
             ')';
     }
 
+    // 传进来一个bytebuffer,  第一个ByteBuffer是用来形容byteBuffer大小的
     public static ByteBufferSend sizePrefixed(ByteBuffer buffer) {
         ByteBuffer sizeBuffer = ByteBuffer.allocate(4);
         sizeBuffer.putInt(0, buffer.remaining());

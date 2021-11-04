@@ -18,6 +18,7 @@ package org.apache.kafka.common.network;
 
 import java.io.IOException;
 
+//装饰器模式, 包装了一个send, 多了一个destination而已
 public class NetworkSend implements Send {
     private final String destinationId;
     private final Send send;

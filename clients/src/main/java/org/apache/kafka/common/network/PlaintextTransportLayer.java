@@ -200,6 +200,7 @@ public class PlaintextTransportLayer implements TransportLayer {
         key.interestOps(key.interestOps() & ~ops);
     }
 
+    // selectionKey不监听OP_READ事件
     @Override
     public boolean isMute() {
         return key.isValid() && (key.interestOps() & SelectionKey.OP_READ) == 0;

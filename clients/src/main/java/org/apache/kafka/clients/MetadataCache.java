@@ -180,6 +180,7 @@ public class MetadataCache {
                 invalidTopics, internalTopics, controller);
     }
 
+    // 重启的感觉
     static MetadataCache bootstrap(List<InetSocketAddress> addresses) {
         Map<Integer, Node> nodes = new HashMap<>();
         int nodeId = -1;
